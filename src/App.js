@@ -3,14 +3,23 @@ import logo from './logo.svg';
 import { app as firebaseApp } from './firebase/firebase';
 import './App.css';
 import { Menu } from './Menu';
+import { NewWalletDialog } from './NewWallet';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof firebaseApp[feature] === 'function');
+  };
 
-    this.menuItems = ['New', 'Join', 'Wallets'];
-  }
+  state = {
+    newWalletOpen: false
+  };
+
+  changeNewWalletDialog = () => {
+    this.setState({ newWalletOpen: !this.state.newWalletOpen })
+  };
+
+  menuItems = [{ name: 'New', dialog: this.changeNewWalletDialog}, { name: 'Join', dialog: () => {} }, { name: 'Wallets', dialog: () => {} }];
 
   render() {
     return (
@@ -19,6 +28,10 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Obschak</h1>
         </header>
+        <NewWalletDialog 
+          open={this.state.newWalletOpen}
+          onClose={this.changeNewWalletDialog}
+        />
         <Menu items={this.menuItems} />
       </div>
     );

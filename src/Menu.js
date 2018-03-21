@@ -15,7 +15,7 @@ class Menu extends Component {
 
     const listItems = this.props.items.map((item, index) => {
       return (
-        <BottomNavigationAction key={item} label={item} />
+        <BottomNavigationAction key={item.name} label={item.name} onClick={item.dialog} />
       );
     });
 
@@ -29,21 +29,6 @@ class Menu extends Component {
       </BottomNavigation>
     );
   }
-  // render() {
-  //   const listItems = this.props.items.map((item, index) => {
-  //     return (
-  //       <li key={index}>
-  //         {item}
-  //       </li>
-  //     );
-  //   });
-
-  //   return (
-  //     <ul>
-  //       {listItems}
-  //     </ul>
-  //   );
-  // }
 }
 
 export {
