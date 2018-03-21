@@ -4,7 +4,7 @@ const config = {
   "apiKey": "AIzaSyDG9AIU2LlnsJwseGZSxQD-nKWIFjYsdgU",
   "databaseURL": "https://fruity-kittens.firebaseio.com",
   "storageBucket": "fruity-kittens.appspot.com",
-  "authDomain": "fruity-kittens.firebaseapp.com",
+  "authDomain": "localhost",
   "messagingSenderId": "189087846366",
   "projectId": "fruity-kittens"
 };
@@ -14,7 +14,9 @@ if (!firebase.apps.length) {
 }
 
 const app = firebase.app();
+const db = firebase.database();
 
 export {
-  app
+  db,
+  app,
 };

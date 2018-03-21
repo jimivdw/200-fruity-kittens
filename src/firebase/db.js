@@ -2,15 +2,24 @@ import { db } from './firebase';
 
 
 /** USERS **/
-export async function createUser(id, name) {
+export async function createUser(id, name, email) {
   return db.ref(`users/${id}`).set({
-    name
+    name,
+    email
   });
 }
 
 export async function getUser(id) {
   const snapshot = await db.ref(`users/${id}`).once();
   return snapshot.val();
+}
+
+export async function getOrCreateUser(id, name, email) {
+  try {
+    return getUser(id);
+  } catch(err) {
+    return createUser(id, name, email);
+  }
 }
 
 export async function updateUser(id, updates) {
@@ -23,12 +32,14 @@ export async function removeUser(id) {
 
 
 /** WALLETS **/
-export async function createWallet(userId) {
+export async function createWallet(name, userId) {
   const newWalletRef = db.ref('wallets').push();
   await newWalletRef.set({
+    name,
     createdBy: userId,
     balance: 0
   });
+  await addUserToWallet(newWalletRef.id, userId)
   return newWalletRef.val();
 }
 
@@ -58,6 +69,7 @@ export async function spendMoney(walletId, amount) {
 
 export async function addUserToWallet(walletId, userId) {
   const user = await getUser(userId);
+  const wallet = await getWallet(walletId);
   const walletRef = await getWalletRef(walletId);
 
   const userWallets = Object.keys(user.wallets);
@@ -66,5 +78,23 @@ export async function addUserToWallet(walletId, userId) {
   }
 
   await walletRef.push({ [userId]: true });
-  await db.ref(`users/${userId}`).push({ [walletId]: true });
+  await db.ref(`users/${userId}/wallets`).push({ [walletId]: wallet.name });
+}
+
+export async function removeUserFromWallet(walletId, userId) {
+  const user = await getUser(userId);
+
+  const userWallets = Object.keys(user.wallets);
+  if(!userWallets.includes(walletId)) {
+    return;
+  }
+
+  await db.ref(`wallets/${walletId}/${userId}`).delete();
+  await db.ref(`users/${userId}/wallets/${walletId}`).delete();
+}
+
+export async function removeWallet(walletId) {
+  const wallet = await getWallet(walletId);
+  await Promise.all(Object.keys(wallet.users).map(userId => db.ref(`users/${userId}/${walletId}`).delete()));
+  return getWalletRef(walletId).delete();
 }
