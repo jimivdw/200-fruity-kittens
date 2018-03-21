@@ -1,0 +1,14 @@
+{
+    "name": "Obschak Shared Wallet",
+    "short_name": "Obschak",
+    "icons": [
+        {
+            "src": "/android-chrome-144x144.png",
+            "sizes": "144x144",
+            "type": "image/png"
+        }
+    ],
+    "theme_color": "#ff6200",
+    "background_color": "#ffffff",
+    "display": "standalone"
+}

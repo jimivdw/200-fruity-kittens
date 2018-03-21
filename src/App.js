@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Login from './googleLogin';
-import logo from './logo.svg';
+import logo from './img/logo_big.png';
 import './App.css';
 import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
