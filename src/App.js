@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Login from './googleLogin';
-import logo from './logo.svg';
+import logo from './img/logo_big.png';
 import './App.css';
 import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
@@ -16,7 +16,15 @@ class App extends Component {
     this.setState({ selectedMenu: value });
   }
 
+  isAuthenticated() {
+    return true;
+  }
+
   render() {
+    if (!this.isAuthenticated()) {
+      return <Login></Login>;
+    }
+
     switch(this.state.selectedMenu) {
       case 'New': 
         this.menuActive = <NewWallet />
@@ -34,12 +42,13 @@ class App extends Component {
 
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to Obschak</h1>
-        </header>
-        <Login></Login>
-        {this.menuActive}
+        <div className="content">
+          <header className="App-header">
+            <img src={logo} className="App-logo" alt="logo" />
+            <h1 className="App-title">Welcome to Obschak</h1>
+          </header>
+          {this.menuActive}
+        </div>
         <Menu items={this.menuItems} handleChange={this.changeMenuItem} />
       </div>
     );
