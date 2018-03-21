@@ -1,38 +1,44 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
-import { app as firebaseApp } from './firebase/firebase';
 import './App.css';
 import { Menu } from './Menu';
-import { NewWalletDialog } from './NewWallet';
+import { NewWallet } from './NewWallet';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.features = ['auth', 'database', 'messaging', 'storage'].filter(feature => typeof firebaseApp[feature] === 'function');
-  };
-
   state = {
-    newWalletOpen: false
+    selectedMenu: 'New',
   };
 
-  changeNewWalletDialog = () => {
-    this.setState({ newWalletOpen: !this.state.newWalletOpen })
-  };
+  menuItems = ['New', 'Join', 'Wallets'];
 
-  menuItems = [{ name: 'New', dialog: this.changeNewWalletDialog}, { name: 'Join', dialog: () => {} }, { name: 'Wallets', dialog: () => {} }];
+  changeMenuItem = value => {
+    this.setState({ selectedMenu: value });
+  }
 
   render() {
+    switch(this.state.selectedMenu) {
+      case 'New': 
+        this.menuActive = <NewWallet />
+        break;
+      case 'Join':
+        this.menuActive = 'Join'
+        break;
+      case 'Wallets':
+        this.menuActive = 'Wallets'
+        break;
+      default: 
+        this.menuActive = <NewWallet />
+        break;
+    }
+
     return (
       <div className="App">
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Obschak</h1>
         </header>
-        <NewWalletDialog 
-          open={this.state.newWalletOpen}
-          onClose={this.changeNewWalletDialog}
-        />
-        <Menu items={this.menuItems} />
+        {this.menuActive}
+        <Menu items={this.menuItems} handleChange={this.changeMenuItem} />
       </div>
     );
   }

@@ -8,14 +8,15 @@ class Menu extends Component {
 
   handleChange = (event, value) => {
     this.setState({ value });
-  };
+    this.props.handleChange(this.props.items[value]);
+  }
 
   render() {
     const { value } = this.state;
 
-    const listItems = this.props.items.map((item, index) => {
+    const listItems = this.props.items.map((item) => {
       return (
-        <BottomNavigationAction key={item.name} label={item.name} onClick={item.dialog} />
+        <BottomNavigationAction key={item} label={item} />
       );
     });
 
