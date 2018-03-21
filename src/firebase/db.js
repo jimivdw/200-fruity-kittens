@@ -2,15 +2,24 @@ import { db } from './firebase';
 
 
 /** USERS **/
-export async function createUser(id, name) {
+export async function createUser(id, name, email) {
   return db.ref(`users/${id}`).set({
-    name
+    name,
+    email
   });
 }
 
 export async function getUser(id) {
   const snapshot = await db.ref(`users/${id}`).once();
   return snapshot.val();
+}
+
+export async function getOrCreateUser(id, name, email) {
+  try {
+    return getUser(id);
+  } catch(err) {
+    return createUser(id, name, email);
+  }
 }
 
 export async function updateUser(id, updates) {
