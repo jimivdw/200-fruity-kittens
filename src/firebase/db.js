@@ -23,9 +23,10 @@ export async function removeUser(id) {
 
 
 /** WALLETS **/
-export async function createWallet(userId) {
+export async function createWallet(name, userId) {
   const newWalletRef = db.ref('wallets').push();
   await newWalletRef.set({
+    name,
     createdBy: userId,
     balance: 0
   });
@@ -59,6 +60,7 @@ export async function spendMoney(walletId, amount) {
 
 export async function addUserToWallet(walletId, userId) {
   const user = await getUser(userId);
+  const wallet = await getWallet(walletId);
   const walletRef = await getWalletRef(walletId);
 
   const userWallets = Object.keys(user.wallets);
@@ -67,7 +69,7 @@ export async function addUserToWallet(walletId, userId) {
   }
 
   await walletRef.push({ [userId]: true });
-  await db.ref(`users/${userId}/wallets`).push({ [walletId]: true });
+  await db.ref(`users/${userId}/wallets`).push({ [walletId]: wallet.name });
 }
 
 export async function removeUserFromWallet(walletId, userId) {
