@@ -18,5 +18,5 @@ const db = firebase.database();
 
 export {
   db,
-  app
+  app,
 };
