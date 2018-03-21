@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
+import injectSheet from 'react-jss'
 import Login from './googleLogin';
 import logo from './img/logo_big.png';
-import './App.css';
+import { styles } from './App.styles';
 import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
 
@@ -21,6 +22,8 @@ class App extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     if (!this.isAuthenticated()) {
       return <Login></Login>;
     }
@@ -41,11 +44,11 @@ class App extends Component {
     }
 
     return (
-      <div className="App">
-        <div className="content">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to Obschak</h1>
+      <div className={classes.wrapper}>
+        <div className={classes.main}>
+          <header className={classes.header}>
+            <img src={logo} className={classes.logo} alt="logo" />
+            <h1 className={classes.title}>Welcome to Obschak</h1>
           </header>
           {this.menuActive}
         </div>
@@ -55,4 +58,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default injectSheet(styles)(App);
