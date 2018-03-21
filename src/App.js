@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import injectSheet from 'react-jss'
-import Login from './googleLogin';
+import { Login, Logout } from './googleLogin';
 import logo from './img/logo_big.png';
 import { styles } from './App.styles';
 import { Menu } from './Menu';
@@ -54,7 +54,7 @@ class App extends Component {
           <header className={classes.header}>
             <img src={logo} className={classes.logo} alt="logo" />
             <h1 className={classes.title}>Welcome to Obschak</h1>
-            <Login />
+            <Logout />
           </header>
           {this.menuActive}
         </div>

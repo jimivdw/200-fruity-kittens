@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { GoogleLogin } from 'react-google-login';
 import { signIn, signOut } from './firebase/auth'
 
-class Login extends Component {
+export class Login extends Component {
   render() {
     return (
       <div>
@@ -13,10 +13,15 @@ class Login extends Component {
         onFailure={signOut}  
       >
       </GoogleLogin>  
-      <button onClick={signOut}>Logout</button>
       </div>
     )
   }
 }
 
-export default Login;
+export class Logout extends Component {
+  render() {
+    return (
+      <button onClick={signOut}>Logout</button>
+    )
+  }
+}
