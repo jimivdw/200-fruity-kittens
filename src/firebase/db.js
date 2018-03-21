@@ -29,6 +29,7 @@ export async function createWallet(userId) {
     createdBy: userId,
     balance: 0
   });
+  await addUserToWallet(newWalletRef.id, userId)
   return newWalletRef.val();
 }
 
@@ -66,5 +67,23 @@ export async function addUserToWallet(walletId, userId) {
   }
 
   await walletRef.push({ [userId]: true });
-  await db.ref(`users/${userId}`).push({ [walletId]: true });
+  await db.ref(`users/${userId}/wallets`).push({ [walletId]: true });
+}
+
+export async function removeUserFromWallet(walletId, userId) {
+  const user = await getUser(userId);
+
+  const userWallets = Object.keys(user.wallets);
+  if(!userWallets.includes(walletId)) {
+    return;
+  }
+
+  await db.ref(`wallets/${walletId}/${userId}`).delete();
+  await db.ref(`users/${userId}/wallets/${walletId}`).delete();
+}
+
+export async function removeWallet(walletId) {
+  const wallet = await getWallet(walletId);
+  await Promise.all(Object.keys(wallet.users).map(userId => db.ref(`users/${userId}/${walletId}`).delete()));
+  return getWalletRef(walletId).delete();
 }

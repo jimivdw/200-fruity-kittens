@@ -8,12 +8,13 @@ class Menu extends Component {
 
   handleChange = (event, value) => {
     this.setState({ value });
-  };
+    this.props.handleChange(this.props.items[value]);
+  }
 
   render() {
     const { value } = this.state;
 
-    const listItems = this.props.items.map((item, index) => {
+    const listItems = this.props.items.map((item) => {
       return (
         <BottomNavigationAction key={item} label={item} />
       );
@@ -29,21 +30,6 @@ class Menu extends Component {
       </BottomNavigation>
     );
   }
-  // render() {
-  //   const listItems = this.props.items.map((item, index) => {
-  //     return (
-  //       <li key={index}>
-  //         {item}
-  //       </li>
-  //     );
-  //   });
-
-  //   return (
-  //     <ul>
-  //       {listItems}
-  //     </ul>
-  //   );
-  // }
 }
 
 export {
