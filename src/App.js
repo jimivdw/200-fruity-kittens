@@ -16,8 +16,8 @@ class App extends Component {
 
   constructor() {
     super();
-    
-    window.addEventListener('user-change', ({ detail: { userId }}) => {
+
+    window.addEventListener('user-change', ({ detail: { userId } }) => {
       this.setState({ isAuthenticated: !!userId });
     });
   }
@@ -33,8 +33,8 @@ class App extends Component {
       return <Login></Login>;
     }
 
-    switch(this.state.selectedMenu) {
-      case 'New': 
+    switch (this.state.selectedMenu) {
+      case 'New':
         this.menuActive = <NewWallet />
         break;
       case 'Join':
@@ -43,26 +43,18 @@ class App extends Component {
       case 'Wallets':
         this.menuActive = 'Wallets'
         break;
-      default: 
+      default:
         this.menuActive = <NewWallet />
         break;
     }
 
     return (
-<<<<<<< HEAD
-      <div className="App">
-        <div className="content">
-          <header className="App-header">
-            <img src={logo} className="App-logo" alt="logo" />
-            <h1 className="App-title">Welcome to Obschak</h1>
-            <Login />
-=======
       <div className={classes.wrapper}>
         <div className={classes.main}>
           <header className={classes.header}>
             <img src={logo} className={classes.logo} alt="logo" />
             <h1 className={classes.title}>Welcome to Obschak</h1>
->>>>>>> 1587467fd37a4cd6bfa3cc48d51151dfd9c3bdef
+            <Login />
           </header>
           {this.menuActive}
         </div>
