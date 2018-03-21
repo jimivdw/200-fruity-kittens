@@ -8,20 +8,25 @@ import { NewWallet } from './NewWallet';
 class App extends Component {
   state = {
     selectedMenu: 'New',
+    isAuthenticated: false
   };
 
   menuItems = ['New', 'Join', 'Wallets'];
+
+  constructor() {
+    super();
+    
+    window.addEventListener('user-change', ({ detail: { userId }}) => {
+      this.setState({ isAuthenticated: !!userId });
+    });
+  }
 
   changeMenuItem = value => {
     this.setState({ selectedMenu: value });
   }
 
-  isAuthenticated() {
-    return true;
-  }
-
   render() {
-    if (!this.isAuthenticated()) {
+    if (!this.state.isAuthenticated) {
       return <Login></Login>;
     }
 
@@ -46,6 +51,7 @@ class App extends Component {
           <header className="App-header">
             <img src={logo} className="App-logo" alt="logo" />
             <h1 className="App-title">Welcome to Obschak</h1>
+            <Login />
           </header>
           {this.menuActive}
         </div>
