@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Login from './googleLogin';
 import logo from './logo.svg';
 import { app as firebaseApp } from './firebase/firebase';
 import './App.css';
@@ -19,6 +20,7 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">Welcome to Obschak</h1>
         </header>
+        <Login></Login>
         <Menu items={this.menuItems} />
       </div>
     );
