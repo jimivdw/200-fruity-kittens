@@ -6,6 +6,7 @@ import logo from './img/logo_big.png';
 import { styles } from './App.styles';
 import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
+import { JoinWallet } from './JoinWallet';
 
 class App extends Component {
   state = {
@@ -24,6 +25,7 @@ class App extends Component {
     });
 
     this.onWalletCreated = this.onWalletCreated.bind(this);
+    this.onWalletJoined = this.onWalletJoined.bind(this);
   }
 
   changeMenuItem = value => {
@@ -32,6 +34,11 @@ class App extends Component {
 
   onWalletCreated(walletId) {
     console.log('Wallet created', walletId);
+    this.setState({ selectedMenu: 'Wallet' });
+  }
+
+  onWalletJoined(walletId) {
+    console.log('Wallet joined', walletId);
     this.setState({ selectedMenu: 'Wallet' });
   }
 
@@ -62,7 +69,7 @@ class App extends Component {
       case 'New':
         return <NewWallet onWalletCreated={this.onWalletCreated}/>;
       case 'Join':
-        return 'Join';
+        return <JoinWallet onWalletJoined={this.onWalletJoined}/>;
       case 'Wallets':
         return 'Wallets';
       case 'Wallet':

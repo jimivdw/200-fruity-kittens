@@ -43,6 +43,10 @@ export async function createWallet(name, userId) {
   return newWalletRef.key;
 }
 
+export function getWalletsRef() {
+  return db.ref('wallets');
+}
+
 export function getWalletRef(id) {
   return db.ref(`wallets/${id}`);
 }
@@ -74,11 +78,12 @@ export async function addUserToWallet(walletId, userId) {
 
   const userWallets = Object.keys(user.wallets || {});
   if (userWallets.includes(walletId)) {
-    throw new Error(`User ${userId} is already part of ${walletId}.`);
+    console.warn(`User ${userId} is already part of ${walletId}.`);
+    return;
   }
 
-  await walletRef.push({ [userId]: true });
-  await db.ref(`users/${userId}/wallets`).push({ [walletId]: wallet.name });
+  await db.ref(`wallets/${walletId}/users/${userId}`).set(user.name);
+  await db.ref(`users/${userId}/wallets/${walletId}`).set(wallet.name);
 }
 
 export async function removeUserFromWallet(walletId, userId) {
