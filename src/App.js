@@ -8,6 +8,7 @@ import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
 import { JoinWallet } from './JoinWallet';
 import { Pay } from './Pay';
+import { SceneRenderer } from './animation/SceneRenderer';
 
 class App extends Component {
   state = {
@@ -79,7 +80,7 @@ class App extends Component {
       case 'Join':
         return <JoinWallet onWalletJoined={this.onWalletJoined}/>;
       case 'Wallets':
-        return 'Wallets';
+        return <SceneRenderer />;
       case 'Wallet':
         return 'Wallet x';
       case 'Pay':
