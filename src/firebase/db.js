@@ -120,7 +120,7 @@ export async function getJoinedWalletsForUser(userId) {
   const walletArray = [];
   await db.ref(`users/${userId}`).once('value')
   .then(function(snapshot){
-    let userWallets = snapshot.val().wallets
+    let userWallets = snapshot.val().wallets || [];
     Object.keys(userWallets).forEach(walletId => {
       walletArray.push(Object.assign({name: userWallets[walletId]}, {id: walletId}))
     })
