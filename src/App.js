@@ -18,12 +18,20 @@ class App extends Component {
     super();
 
     window.addEventListener('user-change', ({ detail: { userId } }) => {
+      window.localStorage.setItem('userId', userId);
       this.setState({ isAuthenticated: !!userId });
     });
+
+    this.onWalletCreated = this.onWalletCreated.bind(this);
   }
 
   changeMenuItem = value => {
     this.setState({ selectedMenu: value });
+  }
+
+  onWalletCreated(walletId) {
+    console.log('Wallet created', walletId);
+    this.setState({ selectedMenu: 'Wallet' });
   }
 
   render() {
@@ -35,7 +43,7 @@ class App extends Component {
 
     switch (this.state.selectedMenu) {
       case 'New':
-        this.menuActive = <NewWallet />
+        this.menuActive = <NewWallet onWalletCreated={this.onWalletCreated}/>
         break;
       case 'Join':
         this.menuActive = 'Join'
@@ -43,8 +51,11 @@ class App extends Component {
       case 'Wallets':
         this.menuActive = 'Wallets'
         break;
+      case 'Wallet':
+        this.menuActive = 'Wallet x'
+        break;
       default:
-        this.menuActive = <NewWallet />
+        this.menuActive = 'Hello'
         break;
     }
 

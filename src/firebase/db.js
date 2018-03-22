@@ -39,8 +39,8 @@ export async function createWallet(name, userId) {
     createdBy: userId,
     balance: 0
   });
-  await addUserToWallet(newWalletRef.id, userId)
-  return newWalletRef.val();
+  await addUserToWallet(newWalletRef.key, userId)
+  return newWalletRef.key;
 }
 
 export function getWalletRef(id) {
@@ -72,7 +72,7 @@ export async function addUserToWallet(walletId, userId) {
   const wallet = await getWallet(walletId);
   const walletRef = await getWalletRef(walletId);
 
-  const userWallets = Object.keys(user.wallets);
+  const userWallets = Object.keys(user.wallets || {});
   if (userWallets.includes(walletId)) {
     throw new Error(`User ${userId} is already part of ${walletId}.`);
   }
@@ -84,7 +84,7 @@ export async function addUserToWallet(walletId, userId) {
 export async function removeUserFromWallet(walletId, userId) {
   const user = await getUser(userId);
 
-  const userWallets = Object.keys(user.wallets);
+  const userWallets = Object.keys(user.wallets || {});
   if (!userWallets.includes(walletId)) {
     return;
   }
@@ -95,6 +95,6 @@ export async function removeUserFromWallet(walletId, userId) {
 
 export async function removeWallet(walletId) {
   const wallet = await getWallet(walletId);
-  await Promise.all(Object.keys(wallet.users).map(userId => db.ref(`users/${userId}/${walletId}`).delete()));
+  await Promise.all(Object.keys(wallet.users || {}).map(userId => db.ref(`users/${userId}/${walletId}`).delete()));
   return getWalletRef(walletId).delete();
 }
