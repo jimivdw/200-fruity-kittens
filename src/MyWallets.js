@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getCreatedWalletsForUser, getJoinedWalletsForUser } from './firebase/db'
+import { getWalletsRef, getCreatedWalletsForUser, getJoinedWalletsForUser, removeWallet } from './firebase/db'
 
 const userId = window.localStorage.getItem('userId')
 
@@ -12,10 +12,6 @@ class MyWallets extends Component {
     };
   }
 
-  getWallets(userId) {
-
-  }
-
   setMyWallets(userId) {
     getCreatedWalletsForUser(userId).then((walletArray) => {
       this.setState({ myWallets: walletArray })
@@ -24,15 +20,20 @@ class MyWallets extends Component {
 
   setJoinedWallets(userId) {
     getJoinedWalletsForUser(userId).then((walletArray) => {
-      console.log('joinedwallets', walletArray.toString());
       this.setState({ joinedWallets: walletArray })
     })
   }
 
   componentDidMount() {
+    this._onChildRemoved = function(snapshot) {
+      this.setState({ myWallets: this.state.myWallets.filter(wallet => wallet.id !== snapshot.key) });
+    }.bind(this);
     this.setJoinedWallets(userId);
     this.setMyWallets(userId);
+
+    getWalletsRef().on('child_removed', this._onChildRemoved);
   }
+
 
   render() {
     return (
@@ -42,7 +43,8 @@ class MyWallets extends Component {
         {
           this.state.myWallets.map(wallet => (
             <div className="wallet" key={wallet.id}>
-              <div className="name">{wallet.name}</div>
+              <span className="name">{wallet.name}</span>
+              <span><button onClick={() => removeWallet(wallet.id)}>Cancel</button></span>
             </div>
           ))
         }
