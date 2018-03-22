@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import injectSheet from 'react-jss'
-import { Login, Logout } from './googleLogin';
+import { Login } from './Login';
+import { Logout } from './Logout';
 import logo from './img/logo_big.png';
 import { styles } from './App.styles';
 import { Menu } from './Menu';
@@ -38,40 +39,37 @@ class App extends Component {
     const { classes } = this.props;
 
     if (!this.state.isAuthenticated) {
-      return <Login></Login>;
-    }
-
-    switch (this.state.selectedMenu) {
-      case 'New':
-        this.menuActive = <NewWallet onWalletCreated={this.onWalletCreated}/>
-        break;
-      case 'Join':
-        this.menuActive = 'Join'
-        break;
-      case 'Wallets':
-        this.menuActive = 'Wallets'
-        break;
-      case 'Wallet':
-        this.menuActive = 'Wallet x'
-        break;
-      default:
-        this.menuActive = 'Hello'
-        break;
+      return <Login />;
     }
 
     return (
-      <div className={classes.wrapper}>
+      <div className={classes.app}>
         <div className={classes.main}>
           <header className={classes.header}>
             <img src={logo} className={classes.logo} alt="logo" />
             <h1 className={classes.title}>Welcome to Obschak</h1>
             <Logout />
           </header>
-          {this.menuActive}
+          {this.getActiveMenu()}
         </div>
         <Menu items={this.menuItems} handleChange={this.changeMenuItem} />
       </div>
     );
+  }
+
+  getActiveMenu() {
+    switch (this.state.selectedMenu) {
+      case 'New':
+        return <NewWallet onWalletCreated={this.onWalletCreated}/>;
+      case 'Join':
+        return 'Join';
+      case 'Wallets':
+        return 'Wallets';
+      case 'Wallet':
+        return 'Wallet x';
+      default:
+        return 'Hello';
+    }
   }
 }
 

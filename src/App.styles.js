@@ -1,7 +1,7 @@
 const logoAnimationId = `app-${Math.random().toString().slice(2)}`;
 
 const styles = {
-  wrapper: {
+  app: {
     textAlign: 'center',
     display: 'flex',
     minHeight: '100vh',
@@ -11,21 +11,18 @@ const styles = {
     flex: 1,
   },
   header: {
-    backgroundColor: '#222',
-    height: '150px',
-    padding: '20px',
+    background: 'linear-gradient(to bottom, rgba(125,126,125,1) 0%,rgba(14,14,14,1) 100%)',
+    height: 150,
+    padding: 20,
     color: 'white',
+    fontSize: 15,
   },
   logo: {
-    animation: `${logoAnimationId} infinite 20s linear`,
-    height: '80px',
+    width: 70,
+    height: 70,
   },
   title: {
     fontSize: '1.5em',
-  },
-  [`@keyframes ${logoAnimationId}`]: {
-    from: { transform: 'rotate(0deg)' },
-    to: { transform: 'rotate(360deg)' },
   },
 };
 
