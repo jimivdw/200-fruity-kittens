@@ -102,7 +102,10 @@ class SceneRenderer extends Component {
     this.markerRoot = new Group();
     this.scene.add(this.markerRoot);
     const onRenderFcts = []; // Array of functions called for each rendering frames
-    const arToolkitContext = initializeArToolkit(renderer, this.camera, onRenderFcts);
+    const getVideoContainer = () => {
+      return this.videoContainer;
+    };
+    const arToolkitContext = initializeArToolkit(renderer, this.camera, onRenderFcts, getVideoContainer);
     const marker = getMarker(arToolkitContext, this.markerRoot);
 
     this.billMaterial.side = THREE.DoubleSide;
@@ -150,14 +153,19 @@ class SceneRenderer extends Component {
     this.renderer.dispose();
   }
 
-  storeRef = node => {
+  storeCanvasRef = node => {
     this.canvas = node;
   }
 
+  storeVideoContainerRef = node => {
+    this.videoContainer = node;
+  }
+
   render() {
-    return (
-      <canvas style={{top: "100px !important"}} id="root" ref={this.storeRef} onClick={this.throwAnimation}></canvas>
-    );
+    return [
+      <canvas style={{top: "100px !important"}} id="root" ref={this.storeCanvasRef} onClick={this.throwAnimation}></canvas>,
+      <div ref={this.storeVideoContainerRef}></div>,
+    ];
   }
 }
 
