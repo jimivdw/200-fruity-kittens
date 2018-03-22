@@ -13,15 +13,33 @@ class SceneRenderer extends Component {
   constructor(props) {
     super(props);
     this.throwAnimation = this.throwAnimation.bind(this);
+    // this.onRenderFct = this.onRenderFct.bind(this);
   }
 
   markerRoot;
+  scene;
+  camera;
+  bill;
+
+  calcDistance(destination) {
+    var dx = 0 - destination.x;
+    var dy = 0 - destination.y;
+    var dz = 0 - destination.z;
+  
+    return Math.sqrt(dx * dx + dy * dy + dz * dz);
+  }
 
   getRandomNumber(x) {
     return Math.floor(Math.random() + x);
   }
   
   glassFill = 0.1;
+  billGeometry = new THREE.PlaneGeometry(2, 1);
+  billTexture = new THREE.TextureLoader().load('dollarbill.jpg');
+    // immediately use the texture for material creation
+  billMaterial = new THREE.MeshBasicMaterial({
+    map: this.billTexture
+  });
   
   setGlassFill(part) {
     this.markerRoot.children[0].children[0].scale.set(1, part, 1);
@@ -30,45 +48,28 @@ class SceneRenderer extends Component {
   }
   
   throwAnimation() {
-    // let scene = this.scene;
-    // let target = this.markerRoot
-    // let element = document.createElement('a-entity');
+    let distance = this.calcDistance(this.markerRoot.children[0]);
+    const stepX = this.markerRoot.position.x / 250.0;
+    const stepY = this.markerRoot.position.y / 250.0;
+    const stepZ = this.markerRoot.position.z / 250.0;
+
+    const renderer = this.renderer;
+
+    let i = 0;
+    let interval = setInterval(() => {
+      if(i === 250) {
+        this.bill.position.set(0, 0, 0);
+        clearInterval(interval);
+      } else {
+        i++;
+        this.bill.position.set(stepX * i, stepY * i, stepZ * i);
+      }
+      
+    }, 1)
   
-    // element.setAttribute('bill', '');
-  
-    // scene.append(element);
-  
-    // element.object3D.position.set(0, 0, 0);
-  
-    // const stepX = target.object3D.position.x / 3;
-    // const stepY = target.object3D.position.y / 3;
-    // const stepZ = target.object3D.position.z / 3;
-  
-    // let track = document.createElement('a-curve');
-    // track.setAttribute('class', `track`);
-    // scene.appendChild(track);
-    // let point1 = document.createElement('a-curve-point');
-    // point1.setAttribute('position', '0 0 0');
-    // track.appendChild(point1);
-    // let point2 = document.createElement('a-curve-point');
-    // point2.setAttribute('position', `${this.getRandomNumber(stepX - 0.5)} ${this.getRandomNumber(stepY - 0.5)} ${this.getRandomNumber(stepZ - 0.5)}`);
-    // track.append(point2);
-    // let point3 = document.createElement('a-curve-point');
-    // point3.setAttribute('position', `${this.getRandomNumber(stepX * 2 - 0.5)} ${this.getRandomNumber(stepY * 2 - 0.5)} ${this.getRandomNumber(stepZ * 2 - 0.5)}`);
-    // track.append(point3);
-    // let point4 = document.createElement('a-curve-point');
-    // point4.setAttribute('position', `${target.object3D.position.x} ${target.object3D.position.y} ${target.object3D.position.z}`);
-    // track.appendChild(point4);
-  
-    // element.setAttribute(`alongpath`, `curve: .track; dur: 1000; loop: false`);
-  
-    // setTimeout(() => {
+    setTimeout(() => {
       this.setGlassFill(this.glassFill + 0.1);
-      // element.object3D.position.set(0, 0, 0);
-      // element.removeAttribute('alongpath');
-      // scene.removeChild(track);
-      // scene.removeChild(element);
-    // }, 1000);
+    }, 1000);
   }
 
   componentDidMount() {
@@ -88,40 +89,33 @@ class SceneRenderer extends Component {
     // for opacity, size, etc.
     const renderer = this.renderer = initializeRenderer(this.canvas);
 
-    const scene = new Scene();
-    const camera = new Camera();
-    scene.add(camera);
+    this.scene = new Scene();
+    this.camera = new Camera();
+    this.scene.add(this.camera);
 
     this.markerRoot = new Group();
-    scene.add(this.markerRoot);
+    this.scene.add(this.markerRoot);
     const onRenderFcts = []; // Array of functions called for each rendering frames
-    const arToolkitContext = initializeArToolkit(renderer, camera, onRenderFcts);
+    const arToolkitContext = initializeArToolkit(renderer, this.camera, onRenderFcts);
     const marker = getMarker(arToolkitContext, this.markerRoot);
 
-    var geometry = new THREE.PlaneGeometry(2, 1);
-    var texture = new THREE.TextureLoader().load('dollarbill.jpg');
-    // immediately use the texture for material creation
-    var material = new THREE.MeshBasicMaterial({
-      map: texture
-    });
+    this.billMaterial.side = THREE.DoubleSide;
+    this.billTexture.needsUpdate = true; // This instruct three.js to update this object at next render
+    
+    this.bill = new Mesh(this.billGeometry, this.billMaterial);
+
+    this.scene.add(this.bill);
 
     const loader = new THREE.ObjectLoader();
     loader.load('beer.json', (beerObj) => {
-      console.log(' I have beer', beerObj);
-      // this.el.setObject3D('beer', beerObj);
       this.markerRoot.add(beerObj);
+      beerObj.children[0].scale.set(1, 0, 1);
+      beerObj.children[0].position.set(0, -1, 0);
     });
 
-    material.side = THREE.DoubleSide;
-
-    texture.needsUpdate = true; // This instruct three.js to update this object at next render
-
     // From the new plane and material, instantiate a three.js mesh
-    this.mesh = new Mesh(geometry, this.material);
-
-    // Instruct arToolKit to display this image at the hiro marker position
-    // markerRoot.add(this.mesh);
-
+    const scene = this.scene;
+    const camera = this.camera;
     // at each frame render, update the scene
     onRenderFcts.push(function () {
       renderer.render(scene, camera);
@@ -156,7 +150,7 @@ class SceneRenderer extends Component {
 
   render() {
     return (
-      <canvas id="root" ref={this.storeRef} onClick={this.throwAnimation} />
+      <canvas id="root" ref={this.storeRef} onClick={this.throwAnimation}></canvas>
     );
   }
 }

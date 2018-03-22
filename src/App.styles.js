@@ -14,7 +14,6 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     minHeight: '100vh',
-    backgroundColor: '#ebebeb'
   },
   loginHeader: {
     display: 'flex',
