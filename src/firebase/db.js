@@ -30,7 +30,6 @@ export async function removeUser(id) {
   return db.ref(`users/${id}`).remove();
 }
 
-
 /** WALLETS **/
 export async function createWallet(name, userId) {
   const newWalletRef = db.ref('wallets').push();
@@ -102,4 +101,30 @@ export async function removeWallet(walletId) {
   const wallet = await getWallet(walletId);
   await Promise.all(Object.keys(wallet.users || {}).map(userId => db.ref(`users/${userId}/${walletId}`).delete()));
   return getWalletRef(walletId).delete();
+}
+
+export async function getCreatedWalletsForUser(userId) {
+  const walletArray = [];
+  await getWalletsRef().once('value')
+  .then(function(snapshot) {
+    snapshot.forEach(function(childSnapshot){
+      if (childSnapshot.val().createdBy === userId) {
+        walletArray.push(Object.assign(childSnapshot.val(), {id: childSnapshot.key}));
+      }
+    })
+  });
+  return walletArray;
+}
+
+export async function getJoinedWalletsForUser(userId) {
+  const walletArray = [];
+  await db.ref(`users/${userId}`).once('value')
+  .then(function(snapshot){
+    let userWallets = snapshot.val().wallets
+    Object.keys(userWallets).forEach(walletId => {
+      walletArray.push(Object.assign({name: userWallets[walletId]}, {id: walletId}))
+    })
+    console.log('db', walletArray)
+  })
+  return walletArray;
 }

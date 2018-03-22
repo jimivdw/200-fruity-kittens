@@ -7,6 +7,7 @@ import { styles } from './App.styles';
 import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
 import { JoinWallet } from './JoinWallet';
+import { MyWallets } from './MyWallets';
 import { Pay } from './Pay';
 import { SceneRenderer } from './animation/SceneRenderer';
 
@@ -17,7 +18,7 @@ class App extends Component {
     walletId: '-L8AJW3C1gGUOe2lxyYt'
   };
 
-  menuItems = ['New', 'Join', 'Wallets', 'Pay'];
+  menuItems = ['New', 'Join', 'Wallets', 'Render', 'Pay'];
 
   constructor() {
     super();
@@ -57,7 +58,7 @@ class App extends Component {
     if (!this.state.isAuthenticated) {
       return <Login />;
     }
-
+    
     return (
       <div className={classes.app}>
         <div className={classes.main}>
@@ -80,9 +81,9 @@ class App extends Component {
       case 'Join':
         return <JoinWallet onWalletJoined={this.onWalletJoined}/>;
       case 'Wallets':
+        return <MyWallets/>;
+      case 'Render':
         return <SceneRenderer />;
-      case 'Wallet':
-        return 'Wallet x';
       case 'Pay':
         return <Pay onPaid={this.onPaid} walletId={this.state.walletId}/>;
       default:
