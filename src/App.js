@@ -7,6 +7,7 @@ import { styles } from './App.styles';
 import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
 import { JoinWallet } from './JoinWallet';
+import { Deposit } from './Deposit';
 
 class App extends Component {
   state = {
@@ -14,7 +15,7 @@ class App extends Component {
     isAuthenticated: false
   };
 
-  menuItems = ['New', 'Join', 'Wallets'];
+  menuItems = ['New', 'Join', 'Wallets', 'Deposit'];
 
   constructor() {
     super();
@@ -74,6 +75,8 @@ class App extends Component {
         return 'Wallets';
       case 'Wallet':
         return 'Wallet x';
+      case 'Deposit':
+        return <Deposit />;
       default:
         return 'Hello';
     }

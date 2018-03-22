@@ -1,19 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Obschak</title>
 
-    <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicons/favicon-16x16.png">
-    <link rel="manifest" href="%PUBLIC_URL%/favicons/site.webmanifest">
-    <link rel="mask-icon" href="%PUBLIC_URL%/favicons/safari-pinned-tab.svg" color="#ff6200">
-    <meta name="msapplication-TileColor" content="#ff6200">
-    <meta name="theme-color" content="#ff6200">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>Obschak</title>
 
-    <!--
+  <link rel="apple-touch-icon" sizes="152x152" href="%PUBLIC_URL%/favicons/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/favicons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/favicons/favicon-16x16.png">
+  <link rel="manifest" href="%PUBLIC_URL%/favicons/site.webmanifest">
+  <link rel="mask-icon" href="%PUBLIC_URL%/favicons/safari-pinned-tab.svg" color="#ff6200">
+  <meta name="msapplication-TileColor" content="#ff6200">
+  <meta name="theme-color" content="#ff6200">
+
+  <!-- <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.0/aframe/examples/vendor/aframe/build/aframe.min.js"></script> -->
+  <!-- <script src="https://rawgit.com/ngokevin/aframe-animation-component/master/dist/aframe-animation-component.min.js"></script> -->
+  <!-- <script src="https://rawgit.com/protyze/aframe-curve-component/master/dist/aframe-curve-component.min.js"></script> -->
+  <!-- <script src="https://rawgit.com/protyze/aframe-alongpath-component/master/dist/aframe-alongpath-component.min.js"></script> -->
+  <script src="https://cdn.rawgit.com/jeromeetienne/AR.js/1.5.0/aframe/build/aframe-ar.js"></script>
+
+  <script>
+    AFRAME.registerComponent('bill', {
+      init: function () {
+        console.log('register');
+        var geometry = new THREE.PlaneGeometry(2, 1);
+        var texture = new THREE.TextureLoader().load('dollarbill.jpg');
+        // immediately use the texture for material creation
+        var material = new THREE.MeshBasicMaterial({
+          map: texture
+        });
+
+        material.side = THREE.DoubleSide;
+
+        this.el.setObject3D('bill', new THREE.Mesh(geometry, material));
+      }
+    });
+
+    AFRAME.registerComponent('react-init', {
+      init: onLoaded
+    });
+  </script>
+
+  <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
       Only files inside the `public` folder can be referenced from the HTML.
@@ -23,24 +52,25 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
 
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
 
-    <style media="screen">
-      body {
-        margin: 0;
-        padding: 0;
-        font-family: Roboto, sans-serif;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- <div id="message"> -->
-    <noscript>
-      You need to enable JavaScript to run this app.
-    </noscript>
+  <style media="screen">
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Roboto, sans-serif;
+    }
+  </style>
+</head>
 
-    <div id="root"></div>
-    <!--
+<body>
+  <!-- <div id="message"> -->
+  <noscript>
+    You need to enable JavaScript to run this app.
+  </noscript>
+
+  <div id="root"></div>
+  <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
 
@@ -50,5 +80,6 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
-  </body>
+</body>
+
 </html>
