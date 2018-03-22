@@ -1,9 +1,10 @@
 const styles = {
   login: {
-    minHeight: '100vh',
+    flex: '1',
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'center',
+    padding: '16px'
   },
 };
 

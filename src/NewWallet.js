@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import injectSheet from 'react-jss'
+import Button from 'material-ui/Button';
+import TextField from 'material-ui/TextField';
 import { createWallet } from './firebase/db';
+import { styles } from './Form.styles'
 
-class NewWallet extends Component {
+class _NewWallet extends Component {
 
   constructor(props) {
     super(props);
@@ -31,19 +35,22 @@ class NewWallet extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Wallet name:
-          <input name="name" type="text" value={this.state.name} onChange={this.handleInputChange} required />
-        </label>
+      <div>
+        <h2>Create a new wallet</h2>
+        <form onSubmit={this.handleSubmit}>
+          <TextField className={classes.wide} name="name" label="Wallet name" type="text" value={this.state.name} onChange={this.handleInputChange} required />
 
-        <button type="submit">Create</button>
-      </form>
+          <hr className={classes.divider}/>
+
+          <div className={classes.actions}>
+            <Button className={classes.wide} type="submit" variant="raised">Create</Button>
+          </div>
+        </form>
+      </div>
     );
   }
 }
 
-export {
-  NewWallet
-}
+export const NewWallet = injectSheet(styles)(_NewWallet);

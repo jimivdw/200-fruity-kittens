@@ -93,14 +93,14 @@ export async function removeUserFromWallet(walletId, userId) {
     return;
   }
 
-  await db.ref(`wallets/${walletId}/${userId}`).delete();
-  await db.ref(`users/${userId}/wallets/${walletId}`).delete();
+  await db.ref(`wallets/${walletId}/${userId}`).remove();
+  await db.ref(`users/${userId}/wallets/${walletId}`).remove();
 }
 
 export async function removeWallet(walletId) {
   const wallet = await getWallet(walletId);
-  await Promise.all(Object.keys(wallet.users || {}).map(userId => db.ref(`users/${userId}/${walletId}`).delete()));
-  return getWalletRef(walletId).delete();
+  await Promise.all(Object.keys(wallet.users || {}).map(userId => db.ref(`users/${userId}/${walletId}`).remove()));
+  return await getWalletRef(walletId).remove();
 }
 
 export async function getCreatedWalletsForUser(userId) {
@@ -124,7 +124,6 @@ export async function getJoinedWalletsForUser(userId) {
     Object.keys(userWallets).forEach(walletId => {
       walletArray.push(Object.assign({name: userWallets[walletId]}, {id: walletId}))
     })
-    console.log('db', walletArray)
   })
   return walletArray;
 }

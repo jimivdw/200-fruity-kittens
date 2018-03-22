@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
+import Button from 'material-ui/Button';
 import { signOut } from './firebase/auth';
 
 export class Logout extends Component {
   render() {
     return (
-      <button onClick={signOut}>Logout</button>
+      <Button variant="raised" onClick={signOut}>Logout</Button>
     )
   }
 }

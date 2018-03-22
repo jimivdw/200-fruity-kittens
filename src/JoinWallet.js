@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
+import injectSheet from 'react-jss'
+import Button from 'material-ui/Button';
+import TextField from 'material-ui/TextField';
 import { getWalletsRef, addUserToWallet } from './firebase/db';
+import { styles } from './Form.styles'
 
-class JoinWallet extends Component {
+class _JoinWallet extends Component {
 
   constructor(props) {
     super(props);
@@ -60,17 +64,20 @@ class JoinWallet extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <label>
-          Search:
-          <input type="text" name="search" value={this.state.search} onChange={this.handleInputChange} />
-        </label>
+        <h2>Join a wallet</h2>
+
+        <TextField className={classes.wide} label="Search" type="text" name="search" value={this.state.search} onChange={this.handleInputChange} />
+
         <div>
           {this.getJoinableWallets().map(wallet => (
-            <div className="wallet" key={wallet.id}>
-              <div className="name">{wallet.name}</div>
-              <div className="join"><button onClick={() => this.join(wallet.id)}>Join</button></div>
+            <div className={classes.option} key={wallet.id}>
+              <div className={classes.optionName}>{wallet.name}</div>
+              <div className={classes.optionAction}>
+                <Button variant="raised" onClick={() => this.join(wallet.id)}>Join</Button>
+              </div>
             </div>
           ))}
         </div>
@@ -79,6 +86,5 @@ class JoinWallet extends Component {
   }
 }
 
-export {
-  JoinWallet
-}
+export const JoinWallet = injectSheet(styles)(_JoinWallet);
+

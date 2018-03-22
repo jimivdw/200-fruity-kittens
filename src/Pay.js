@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import Button from 'material-ui/Button';
+import { CircularProgress } from 'material-ui/Progress';
 import { spendMoney, getWalletRef } from './firebase/db';
 
 export class Pay extends Component {
@@ -47,20 +49,34 @@ export class Pay extends Component {
     }, 3000);
   }
 
-  render() {
-    if(this.state.amountRequested === null) {
-      return <div>Hold your phone to the terminal</div>;
+  getContent() {
+    if (this.state.amountRequested === null) {
+      return <div>Please hold your phone to the terminal.</div>;
     }
 
-    if(this.state.paymentSending) {
-      return <div>Please hold while we're processing your payment...</div>
+    if (this.state.paymentSending) {
+      return (
+        <div>
+          <p>Please hold while we're processing your payment...</p>
+          <CircularProgress />
+        </div>
+      );
     }
 
     return (
       <div>
         <p>A payment of {new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR' }).format(this.state.amountRequested)} is requested.</p>
-        <button onClick={this.pay}>Confirm payment</button>
+        <Button variant="raised" onClick={this.pay}>Confirm payment</Button>
       </div>
-      );
-    }
+    );
   }
+
+  render() {
+    return (
+      <div>
+        <h2>Make a payment</h2>
+        {this.getContent()}
+      </div>
+    );
+  }
+}
