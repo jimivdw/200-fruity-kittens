@@ -87,23 +87,23 @@ class SceneRenderer extends Component {
 
 
     let i = 0;
-    let animate = function animate() {
+    const rand = (-1 + Math.random() * 2) * 0.05;   
+    let rad = Math.PI *2;
+    this.bill.rotation.set(rad * (4 * rand), rad * rand, rad * rand);
 
+    let animate = function animate() {
       const stepX = this.markerRoot.position.x / steps;
       const stepY = this.markerRoot.position.y / steps;
       const stepZ = this.markerRoot.position.z / steps;
 
-      const ef = 1;//EasingFunctions.easeInOutCubic(1/i); //easing factor
+      const ef =  1; //EasingFunctions.easeInQuad(1/i); //easing factor
 
       if(i === steps) {
-        this.bill.position.set(0, 0, 0);
+        this.bill.position.set(0,   0, 0);
       } else {
         requestAnimationFrame(animate.bind(this));
         i++;
-        const rand = 1 ;//+ (-1 + Math.random() * 2) * 0.1;   
         this.bill.position.set((stepX * i) * ef, (stepY * i)  * ef, (stepZ * i) * ef);
-        // this.bill.rotation.set();
-
       }
     }.bind(this);
 
