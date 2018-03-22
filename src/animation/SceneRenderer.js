@@ -9,6 +9,37 @@ import { initializeArToolkit, getMarker } from './ARToolkit';
 
 const { Camera, DoubleSide, Group, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, Texture } = THREE;
 
+
+const EasingFunctions = {
+  // no easing, no acceleration
+  linear: function (t) { return t },
+  // accelerating from zero velocity
+  easeInQuad: function (t) { return t*t },
+  // decelerating to zero velocity
+  easeOutQuad: function (t) { return t*(2-t) },
+  // acceleration until halfway, then deceleration
+  easeInOutQuad: function (t) { return t<.5 ? 2*t*t : -1+(4-2*t)*t },
+  // accelerating from zero velocity 
+  easeInCubic: function (t) { return t*t*t },
+  // decelerating to zero velocity 
+  easeOutCubic: function (t) { return (--t)*t*t+1 },
+  // acceleration until halfway, then deceleration 
+  easeInOutCubic: function (t) { return t<.5 ? 4*t*t*t : (t-1)*(2*t-2)*(2*t-2)+1 },
+  // accelerating from zero velocity 
+  easeInQuart: function (t) { return t*t*t*t },
+  // decelerating to zero velocity 
+  easeOutQuart: function (t) { return 1-(--t)*t*t*t },
+  // acceleration until halfway, then deceleration
+  easeInOutQuart: function (t) { return t<.5 ? 8*t*t*t*t : 1-8*(--t)*t*t*t },
+  // accelerating from zero velocity
+  easeInQuint: function (t) { return t*t*t*t*t },
+  // decelerating to zero velocity
+  easeOutQuint: function (t) { return 1+(--t)*t*t*t*t },
+  // acceleration until halfway, then deceleration 
+  easeInOutQuint: function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
+}
+
+
 class SceneRenderer extends Component {
   constructor(props) {
     super(props);
@@ -49,23 +80,37 @@ class SceneRenderer extends Component {
   
   throwAnimation() {
     let distance = this.calcDistance(this.markerRoot.children[0]);
-    const stepX = this.markerRoot.position.x / 250.0;
-    const stepY = this.markerRoot.position.y / 250.0;
-    const stepZ = this.markerRoot.position.z / 250.0;
+    let steps = 60;
+
+    // const stepX = this.markerRoot.position.x / steps;
+    // const stepY = this.markerRoot.position.y / steps;
+    // const stepZ = this.markerRoot.position.z / steps;
 
     const renderer = this.renderer;
 
+
     let i = 0;
-    let interval = setInterval(() => {
-      if(i === 250) {
+    let animate = function animate() {
+
+      const stepX = this.markerRoot.position.x / steps;
+      const stepY = this.markerRoot.position.y / steps;
+      const stepZ = this.markerRoot.position.z / steps;
+
+      const ef = 1;//EasingFunctions.easeInOutCubic(1/i); //easing factor
+
+      if(i === steps) {
         this.bill.position.set(0, 0, 0);
-        clearInterval(interval);
       } else {
+        requestAnimationFrame(animate.bind(this));
         i++;
-        this.bill.position.set(stepX * i, stepY * i, stepZ * i);
+        const rand = 1 ;//+ (-1 + Math.random() * 2) * 0.1;   
+        this.bill.position.set((stepX * i) * ef, (stepY * i)  * ef, (stepZ * i) * ef);
+        // this.bill.rotation.set();
+
       }
-      
-    }, 1)
+    }.bind(this);
+
+    animate();
   
     setTimeout(() => {
       this.setGlassFill(this.glassFill + 0.1);
