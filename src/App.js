@@ -3,6 +3,7 @@ import injectSheet from 'react-jss'
 import { Login } from './Login';
 import { Logout } from './Logout';
 import logo from './img/logo_big.png';
+import icon from './img/logo_small_inverted.png';
 import { styles } from './App.styles';
 import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
@@ -10,6 +11,8 @@ import { JoinWallet } from './JoinWallet';
 import { MyWallets } from './MyWallets';
 import { Pay } from './Pay';
 import { SceneRenderer } from './animation/SceneRenderer';
+import CssBaseline from 'material-ui/CssBaseline';
+
 
 class App extends Component {
   state = {
@@ -55,21 +58,34 @@ class App extends Component {
   render() {
     const { classes } = this.props;
 
-    if (!this.state.isAuthenticated) {
-      return <Login />;
-    }
-    
     return (
       <div className={classes.app}>
+        <CssBaseline/>
         <div className={classes.main}>
-          <header className={classes.header}>
-            <img src={logo} className={classes.logo} alt="logo" />
-            <h1 className={classes.title}>Welcome to Obschak</h1>
-            <Logout />
-          </header>
-          {this.getActiveMenu()}
+          {this.state.isAuthenticated
+            ? (
+              <div className={classes.loginContainer}>
+                <header className={classes.header}>
+                  <img src={icon} className={classes.icon} alt="logo" />
+                  <h1 className={classes.title}>Obschak</h1>
+                  <Logout />
+                </header>
+                <div className={classes.content}>
+                  {this.getActiveMenu()}
+                </div>
+                <Menu items={this.menuItems} handleChange={this.changeMenuItem} />
+              </div>
+            )
+            : (
+              <div className={classes.loginContainer}>
+                <header className={classes.loginHeader}>
+                  <img src={logo} className={classes.logo} alt="logo" />
+                  <h1 className={classes.title}>Welcome to Obschak</h1>
+                </header>
+                <Login />
+              </div>
+            )}
         </div>
-        <Menu items={this.menuItems} handleChange={this.changeMenuItem} />
       </div>
     );
   }
@@ -77,15 +93,15 @@ class App extends Component {
   getActiveMenu() {
     switch (this.state.selectedMenu) {
       case 'New':
-        return <NewWallet onWalletCreated={this.onWalletCreated}/>;
+        return <NewWallet onWalletCreated={this.onWalletCreated} />;
       case 'Join':
-        return <JoinWallet onWalletJoined={this.onWalletJoined}/>;
+        return <JoinWallet onWalletJoined={this.onWalletJoined} />;
       case 'Wallets':
         return <MyWallets/>;
       case 'Render':
         return <SceneRenderer />;
       case 'Pay':
-        return <Pay onPaid={this.onPaid} walletId={this.state.walletId}/>;
+        return <Pay onPaid={this.onPaid} walletId={this.state.walletId} />;
       default:
         return 'Hello';
     }
