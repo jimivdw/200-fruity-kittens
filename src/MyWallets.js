@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
+import injectSheet from 'react-jss'
+import Button from 'material-ui/Button';
 import { getWalletsRef, getCreatedWalletsForUser, getJoinedWalletsForUser, removeWallet } from './firebase/db'
+import { styles } from './Form.styles'
 
 const userId = window.localStorage.getItem('userId')
 
-class MyWallets extends Component {
+class _MyWallets extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -36,24 +39,24 @@ class MyWallets extends Component {
 
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
-        <h3 className="walletType">Owned
-        </h3>
+        <h2>My wallets</h2>
+        <h3 className="walletType">Owned</h3>
         {
           this.state.myWallets.map(wallet => (
-            <div className="wallet" key={wallet.id}>
-              <span className="name">{wallet.name}</span>
-              <span><button onClick={() => removeWallet(wallet.id)}>Cancel</button></span>
+            <div className={classes.option} key={wallet.id}>
+              <span className={classes.optionName}>{wallet.name}</span>
+              <span><Button variant="raised" onClick={() => removeWallet(wallet.id)}>Cancel</Button></span>
             </div>
           ))
         }
-        <h3 className="walletType">Joined
-        </h3>
+        <h3 className="walletType">Joined</h3>
         {
           this.state.joinedWallets.map(wallet => (
-            <div className="wallet" key={wallet.id}>
-              <div className="name">{wallet.name}</div>
+            <div className={classes.option} key={wallet.id}>
+              <div className={classes.optionName}>{wallet.name}</div>
             </div>
           ))
         }
@@ -61,7 +64,4 @@ class MyWallets extends Component {
     )
   }
 }
-
-export {
-  MyWallets
-}
+export const MyWallets = injectSheet(styles)(_MyWallets);
