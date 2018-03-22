@@ -7,6 +7,7 @@ import { styles } from './App.styles';
 import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
 import { JoinWallet } from './JoinWallet';
+import { MyWallets } from './MyWallets';
 
 class App extends Component {
   state = {
@@ -48,7 +49,7 @@ class App extends Component {
     if (!this.state.isAuthenticated) {
       return <Login />;
     }
-
+    
     return (
       <div className={classes.app}>
         <div className={classes.main}>
@@ -71,7 +72,7 @@ class App extends Component {
       case 'Join':
         return <JoinWallet onWalletJoined={this.onWalletJoined}/>;
       case 'Wallets':
-        return 'Wallets';
+        return <MyWallets/>;
       case 'Wallet':
         return 'Wallet x';
       default:

@@ -13,7 +13,7 @@ class Menu extends Component {
 
   render() {
     const { value } = this.state;
-
+    
     const listItems = this.props.items.map((item) => {
       return (
         <BottomNavigationAction key={item} label={item} />
