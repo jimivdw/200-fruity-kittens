@@ -8,14 +8,16 @@ import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
 import { JoinWallet } from './JoinWallet';
 import { MyWallets } from './MyWallets';
+import { Pay } from './Pay';
 
 class App extends Component {
   state = {
     selectedMenu: 'New',
-    isAuthenticated: false
+    isAuthenticated: false,
+    walletId: '-L8AJW3C1gGUOe2lxyYt'
   };
 
-  menuItems = ['New', 'Join', 'Wallets'];
+  menuItems = ['New', 'Join', 'Wallets', 'Pay'];
 
   constructor() {
     super();
@@ -27,6 +29,7 @@ class App extends Component {
 
     this.onWalletCreated = this.onWalletCreated.bind(this);
     this.onWalletJoined = this.onWalletJoined.bind(this);
+    this.onPaid = this.onPaid.bind(this);
   }
 
   changeMenuItem = value => {
@@ -40,6 +43,11 @@ class App extends Component {
 
   onWalletJoined(walletId) {
     console.log('Wallet joined', walletId);
+    this.setState({ selectedMenu: 'Wallet' });
+  }
+
+  onPaid(walletId) {
+    console.log('Wallet paid', walletId);
     this.setState({ selectedMenu: 'Wallet' });
   }
 
@@ -75,6 +83,8 @@ class App extends Component {
         return <MyWallets/>;
       case 'Wallet':
         return 'Wallet x';
+      case 'Pay':
+        return <Pay onPaid={this.onPaid} walletId={this.state.walletId}/>;
       default:
         return 'Hello';
     }
