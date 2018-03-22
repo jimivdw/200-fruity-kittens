@@ -10,6 +10,13 @@ import { initializeArToolkit, getMarker } from './ARToolkit';
 const { Camera, DoubleSide, Group, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, Texture } = THREE;
 
 class SceneRenderer extends Component {
+  constructor(props) {
+    super(props);
+    this.throwAnimation = this.throwAnimation.bind(this);
+  }
+
+  markerRoot;
+
   getRandomNumber(x) {
     return Math.floor(Math.random() + x);
   }
@@ -17,9 +24,8 @@ class SceneRenderer extends Component {
   glassFill = 0.1;
   
   setGlassFill(part) {
-    const glass = this.markerRoot;
-    glass.object3D.children[1].children[0].scale.set(1, part, 1);
-    glass.object3D.children[1].children[0].position.set(0, -1 + part, 0);
+    this.markerRoot.children[0].children[0].scale.set(1, part, 1);
+    this.markerRoot.children[0].children[0].position.set(0, -1 + part, 0);
     this.glassFill = part;
   }
   
@@ -56,13 +62,13 @@ class SceneRenderer extends Component {
   
     // element.setAttribute(`alongpath`, `curve: .track; dur: 1000; loop: false`);
   
-    setTimeout(() => {
+    // setTimeout(() => {
       this.setGlassFill(this.glassFill + 0.1);
       // element.object3D.position.set(0, 0, 0);
       // element.removeAttribute('alongpath');
       // scene.removeChild(track);
       // scene.removeChild(element);
-    }, 1000);
+    // }, 1000);
   }
 
   componentDidMount() {
@@ -86,11 +92,11 @@ class SceneRenderer extends Component {
     const camera = new Camera();
     scene.add(camera);
 
-    const markerRoot = new Group();
-    scene.add(markerRoot);
+    this.markerRoot = new Group();
+    scene.add(this.markerRoot);
     const onRenderFcts = []; // Array of functions called for each rendering frames
     const arToolkitContext = initializeArToolkit(renderer, camera, onRenderFcts);
-    const marker = getMarker(arToolkitContext, markerRoot);
+    const marker = getMarker(arToolkitContext, this.markerRoot);
 
     var geometry = new THREE.PlaneGeometry(2, 1);
     var texture = new THREE.TextureLoader().load('dollarbill.jpg');
@@ -103,7 +109,7 @@ class SceneRenderer extends Component {
     loader.load('beer.json', (beerObj) => {
       console.log(' I have beer', beerObj);
       // this.el.setObject3D('beer', beerObj);
-      markerRoot.add(beerObj);
+      this.markerRoot.add(beerObj);
     });
 
     material.side = THREE.DoubleSide;
