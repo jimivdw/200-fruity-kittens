@@ -16,11 +16,14 @@ const { ArMarkerControls, ArToolkitContext, ArToolkitSource } = THREEx;
  * @param {Array} onRenderFcts an array of functions which will be executed every frames
  * @returns {Object} An ArToolkitContext instance
  */
-export function initializeArToolkit(renderer, camera, onRenderFcts) {
+export function initializeArToolkit(renderer, camera, onRenderFcts, getVideoContainer) {
     ArToolkitContext.baseURL = '../';
     const arToolkitSource = new ArToolkitSource({ sourceType : 'webcam' });
 
     arToolkitSource.init(() => {
+        const videoContainer = getVideoContainer();
+        videoContainer.appendChild(arToolkitSource.domElement);
+        arToolkitSource.domElement.click(); // video recording stops if not clicked
         arToolkitSource.onResizeElement(renderer.domElement);
     });
 

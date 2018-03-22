@@ -13,6 +13,7 @@ class _MyWallets extends Component {
       myWallets: [],
       joinedWallets: [],
     };
+    this.doShowWallet = this.doShowWallet.bind(this);
   }
 
   setMyWallets(userId) {
@@ -37,6 +38,11 @@ class _MyWallets extends Component {
     getWalletsRef().on('child_removed', this._onChildRemoved);
   }
 
+  doShowWallet(walletId) {
+    const showWallet = this.props.showWallet || (() => { });
+    showWallet(walletId);
+  }
+
 
   render() {
     const { classes } = this.props;
@@ -46,16 +52,16 @@ class _MyWallets extends Component {
         <h3 className="walletType">Owned</h3>
         {
           this.state.myWallets.map(wallet => (
-            <div className={classes.option} key={wallet.id}>
+            <div className={classes.option} key={wallet.id} onClick={() => this.doShowWallet(wallet.id)}>
               <span className={classes.optionName}>{wallet.name}</span>
-              <span><Button variant="raised" onClick={() => removeWallet(wallet.id)}>Cancel</Button></span>
+              <span><Button variant="raised" onClick={(evt) => { removeWallet(wallet.id); evt.stopPropagation(); }}>Cancel</Button></span>
             </div>
           ))
         }
         <h3 className="walletType">Joined</h3>
         {
           this.state.joinedWallets.map(wallet => (
-            <div className={classes.option} key={wallet.id}>
+            <div className={classes.option} key={wallet.id} onClick={() => this.doShowWallet(wallet.id)}>
               <div className={classes.optionName}>{wallet.name}</div>
             </div>
           ))

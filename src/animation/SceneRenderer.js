@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import initializeRenderer from './initializeRenderer';
 import { initializeArToolkit, getMarker } from './ARToolkit';
+import { depositMoney } from '../firebase/db';
 // import detectEdge from './utils/detectEdge';
 
 const { Camera, DoubleSide, Group, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, Texture } = THREE;
@@ -82,10 +83,6 @@ class SceneRenderer extends Component {
     let distance = this.calcDistance(this.markerRoot.children[0]);
     let steps = 60;
 
-    // const stepX = this.markerRoot.position.x / steps;
-    // const stepY = this.markerRoot.position.y / steps;
-    // const stepZ = this.markerRoot.position.z / steps;
-
     const renderer = this.renderer;
 
 
@@ -117,6 +114,10 @@ class SceneRenderer extends Component {
     }, 1000);
   }
 
+  componentWillUnmount() {
+    console.log('jeje');
+  }
+
   componentDidMount() {
     const {
       blackImage,
@@ -141,7 +142,10 @@ class SceneRenderer extends Component {
     this.markerRoot = new Group();
     this.scene.add(this.markerRoot);
     const onRenderFcts = []; // Array of functions called for each rendering frames
-    const arToolkitContext = initializeArToolkit(renderer, this.camera, onRenderFcts);
+    const getVideoContainer = () => {
+      return this.videoContainer;
+    };
+    const arToolkitContext = initializeArToolkit(renderer, this.camera, onRenderFcts, getVideoContainer);
     const marker = getMarker(arToolkitContext, this.markerRoot);
 
     this.billMaterial.side = THREE.DoubleSide;
@@ -189,14 +193,19 @@ class SceneRenderer extends Component {
     this.renderer.dispose();
   }
 
-  storeRef = node => {
+  storeCanvasRef = node => {
     this.canvas = node;
   }
 
+  storeVideoContainerRef = node => {
+    this.videoContainer = node;
+  }
+
   render() {
-    return (
-      <canvas id="root" ref={this.storeRef} onClick={this.throwAnimation}></canvas>
-    );
+    return [
+      <canvas style={{top: "100px !important"}} id="root" ref={this.storeCanvasRef} onClick={this.throwAnimation}></canvas>,
+      <div ref={this.storeVideoContainerRef}></div>,
+    ];
   }
 }
 

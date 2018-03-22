@@ -32,12 +32,19 @@ const styles = {
   },
   header: {
     display: 'flex',
-    alignItems: 'center',
+    flexDirection: 'column',
     backgroundColor: '#ff6200',
-    height: 64,
+    minHeight: 64,
     padding: 16,
     color: 'white',
     fontSize: 16,
+  },
+  headerMain: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  headerDetails: {
+    marginTop: 16
   },
   icon: {
     width: 32,
@@ -48,7 +55,8 @@ const styles = {
   title: {
     fontSize: '1.4em',
     flex: 1,
-    textAlign: 'left'
+    textAlign: 'left',
+    margin: 0
   },
   content: {
     flex: 1,

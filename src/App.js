@@ -9,6 +9,7 @@ import { Menu } from './Menu';
 import { NewWallet } from './NewWallet';
 import { JoinWallet } from './JoinWallet';
 import { MyWallets } from './MyWallets';
+import { ActiveWallet } from './ActiveWallet';
 import { Pay } from './Pay';
 import { SceneRenderer } from './animation/SceneRenderer';
 import CssBaseline from 'material-ui/CssBaseline';
@@ -16,12 +17,12 @@ import CssBaseline from 'material-ui/CssBaseline';
 
 class App extends Component {
   state = {
-    selectedMenu: 'New',
+    selectedMenu: 'Wallets',
     isAuthenticated: false,
-    walletId: '-L8AJW3C1gGUOe2lxyYt'
+    activeWallet: null
   };
 
-  menuItems = ['New', 'Join', 'Wallets', 'Render', 'Pay'];
+  menuItems = ['Wallets', 'New', 'Join'];
 
   constructor() {
     super();
@@ -33,7 +34,9 @@ class App extends Component {
 
     this.onWalletCreated = this.onWalletCreated.bind(this);
     this.onWalletJoined = this.onWalletJoined.bind(this);
+    this.doPay = this.doPay.bind(this);
     this.onPaid = this.onPaid.bind(this);
+    this.showWallet = this.showWallet.bind(this);
   }
 
   changeMenuItem = value => {
@@ -41,18 +44,23 @@ class App extends Component {
   }
 
   onWalletCreated(walletId) {
-    console.log('Wallet created', walletId);
-    this.setState({ selectedMenu: 'Wallet' });
+    this.setState({ activeWallet: walletId, selectedMenu: 'Render' });
   }
 
   onWalletJoined(walletId) {
-    console.log('Wallet joined', walletId);
-    this.setState({ selectedMenu: 'Wallet' });
+    this.setState({ activeWallet: walletId, selectedMenu: 'Render' });
+  }
+  
+  showWallet(walletId) {
+    this.setState({ activeWallet: walletId, selectedMenu: 'Render' });
+  }
+
+  doPay(walletId) {
+    this.setState({ selectedMenu: 'Pay' });
   }
 
   onPaid(walletId) {
-    console.log('Wallet paid', walletId);
-    this.setState({ selectedMenu: 'Wallet' });
+    this.setState({ activeWallet: walletId, selectedMenu: 'Render' });
   }
 
   render() {
@@ -66,9 +74,12 @@ class App extends Component {
             ? (
               <div className={classes.loginContainer}>
                 <header className={classes.header}>
-                  <img src={icon} className={classes.icon} alt="logo" />
-                  <h1 className={classes.title}>Obschak</h1>
-                  <Logout />
+                  <div className={classes.headerMain}>
+                    <img src={icon} className={classes.icon} alt="logo" />
+                    <h1 className={classes.title}>Obschak</h1>
+                    <Logout />
+                  </div>
+                  {this.state.activeWallet ? <div className={classes.headerDetails}><ActiveWallet walletId={this.state.activeWallet} doPay={this.doPay}/></div> : ''}
                 </header>
                 <div className={classes.content}>
                   {this.getActiveMenu()}
@@ -91,17 +102,22 @@ class App extends Component {
   }
 
   getActiveMenu() {
+    if(this.state.activeWallet && !['Render', 'Pay'].includes(this.state.selectedMenu)) {
+      this.setState({ activeWallet: null });
+      return;
+    }
+
     switch (this.state.selectedMenu) {
       case 'New':
         return <NewWallet onWalletCreated={this.onWalletCreated} />;
       case 'Join':
         return <JoinWallet onWalletJoined={this.onWalletJoined} />;
       case 'Wallets':
-        return <MyWallets/>;
+        return <MyWallets showWallet={this.showWallet}/>;
       case 'Render':
-        return <SceneRenderer />;
+        return <SceneRenderer walletId={this.state.activeWallet} />;
       case 'Pay':
-        return <Pay onPaid={this.onPaid} walletId={this.state.walletId} />;
+        return <Pay onPaid={this.onPaid} walletId={this.state.activeWallet} />;
       default:
         return 'Hello';
     }
