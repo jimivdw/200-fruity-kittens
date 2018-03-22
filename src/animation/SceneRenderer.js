@@ -5,6 +5,7 @@
 import React, { Component } from 'react';
 import initializeRenderer from './initializeRenderer';
 import { initializeArToolkit, getMarker } from './ARToolkit';
+import { depositMoney } from '../firebase/db';
 // import detectEdge from './utils/detectEdge';
 
 const { Camera, DoubleSide, Group, Mesh, MeshBasicMaterial, PlaneGeometry, Scene, Texture } = THREE;
@@ -49,16 +50,17 @@ class SceneRenderer extends Component {
   
   throwAnimation() {
     let distance = this.calcDistance(this.markerRoot.children[0]);
-    const stepX = this.markerRoot.position.x / 250.0;
-    const stepY = this.markerRoot.position.y / 250.0;
-    const stepZ = this.markerRoot.position.z / 250.0;
+    const stepX = this.markerRoot.position.x / 125.0;
+    const stepY = this.markerRoot.position.y / 125.0;
+    const stepZ = this.markerRoot.position.z / 125.0;
 
     const renderer = this.renderer;
 
     let i = 0;
     let interval = setInterval(() => {
-      if(i === 250) {
+      if(i === 125) {
         this.bill.position.set(0, 0, 0);
+        depositMoney(this.props.walletId, 10);
         clearInterval(interval);
       } else {
         i++;
@@ -70,6 +72,10 @@ class SceneRenderer extends Component {
     setTimeout(() => {
       this.setGlassFill(this.glassFill + 0.1);
     }, 1000);
+  }
+
+  componentWillUnmount() {
+    console.log('jeje');
   }
 
   componentDidMount() {
@@ -150,7 +156,7 @@ class SceneRenderer extends Component {
 
   render() {
     return (
-      <canvas id="root" ref={this.storeRef} onClick={this.throwAnimation}></canvas>
+      <canvas style={{top: "100px !important"}} id="root" ref={this.storeRef} onClick={this.throwAnimation}></canvas>
     );
   }
 }
