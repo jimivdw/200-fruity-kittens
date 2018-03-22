@@ -29,6 +29,7 @@
 		{
 			"uuid": "9BD4B28A-DA1F-45E9-B511-5AF83D0076EA",
 			"type": "MeshStandardMaterial",
+			"side": 2,
 			"color": 58111,
 			"roughness": 0.5,
 			"metalness": 1,
